@@ -33,6 +33,9 @@ def parse_args():
     parser.add_argument('--args', type=str, default='',
                       help='args for solver')
     
+    # Add quiet option 
+    parser.add_argument('--quiet', action='store_true', default=False, help='quiet mode')
+    
     args = parser.parse_args()
     
     # # Initialize list to store test case paths
@@ -89,5 +92,5 @@ if __name__ == '__main__':
     args, test_cases_dict = parse_args()
     
     result_dir = test_init(args.solver)  
-    results = test(args.test_case_paths, args.args, args.solver, args.thread_num, args.timeout, test_cases_dict, result_dir)
+    results = test(args.test_case_paths, args.args, args.solver, args.thread_num, args.timeout, test_cases_dict, result_dir, args.quiet)
     save_result(results, result_dir)

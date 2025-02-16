@@ -31,7 +31,7 @@ def setup_logging(result_dir):
     
     return logger
 
-def run_single_test(test_case_path, test_args, solver_run_cmd, parser_class, timeout, result_dir):
+def run_single_test(test_case_path, test_args, solver_run_cmd, parser_class, timeout, result_dir, quiet):
     """Run a single test case and parse its output"""
     test_case = test_case_path.split('/')[-1].split('.')[0]
     logging.info(f"🔄 Running test case: {test_case}")
@@ -47,7 +47,7 @@ def run_single_test(test_case_path, test_args, solver_run_cmd, parser_class, tim
             parser = parser_class(stdout.decode())
             
             pos = stdout.decode().find('---- [ result ] ------')
-            if pos != -1:
+            if pos != -1 and not quiet:
                 save_info = stdout[pos:]
                 single_log_path = os.path.join(result_dir, 'single_logs', f'{test_case}.log')
                 single_log_file = open(single_log_path, 'w')
@@ -72,7 +72,7 @@ def run_single_test(test_case_path, test_args, solver_run_cmd, parser_class, tim
         logging.error(f"❌ Error running test case {test_case}: {e}")
         raise e
 
-def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dict, result_dir):
+def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dict, result_dir, quiet):
     """Run test cases in parallel and collect results"""
     # 设置日志
     logger = setup_logging(result_dir)
@@ -105,7 +105,7 @@ def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dic
         # Create thread pool and run tests in parallel
         with ThreadPoolExecutor(max_workers=thread_num) as executor:
             future_to_test = {
-                executor.submit(run_single_test, test_case_path, test_args, solver_run_cmd, parser_class, timeout, result_dir): test_case_path
+                executor.submit(run_single_test, test_case_path, test_args, solver_run_cmd, parser_class, timeout, result_dir, quiet): test_case_path
                 for test_case_path in test_case_paths
             }
             print()
