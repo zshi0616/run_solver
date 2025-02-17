@@ -14,7 +14,7 @@
                 "--solver", "kissat", 
                 "--testcases", "testcases/cnf/SAT", 
                 "--format", "cnf", 
-                "--thread_num", "4", 
+                "--thread_num", "1", 
                 "--timeout", "10", 
                 "--quiet"
             ]

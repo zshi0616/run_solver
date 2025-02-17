@@ -64,7 +64,7 @@ def run_single_test(test_case_path, test_args, solver_run_cmd, parser_class, tim
             logging.warning(f"⏰ Test case {test_case} timed out after {timeout} seconds")
             result = {
                 'test_case': test_case,
-                'predict': 'error', 
+                'predict': 'timeout', 
                 'time': timeout
             }
             return result
@@ -127,6 +127,7 @@ def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dic
                         'result': None,
                         'error': str(e)
                     }
+                    raise e
         
         total_time = round(time.time() - start_time, 2)
         
@@ -141,15 +142,15 @@ def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dic
         logging.info(f"   • Total solve time: {all_time}s")
         logging.info(f"   • Total Cases: {len(results)}")
         
-        success_count = sum(1 for r in results.values() if r and r.get('predict') != 'error')
+        success_count = sum(1 for r in results.values() if r.get('predict') != 'timeout')
         # correct_count = sum(1 for r in results.values() if r and r.get('predict') != 'error' and r.get('predict') == r.get('target'))
         # incorrect_count = sum(1 for r in results.values() if r and r.get('predict') != 'error' and r.get('predict') != r.get('target'))
         logging.info(f"   • ✅ Successful: {success_count}")
         # logging.info(f"       • ✅ Correct: {correct_count}")
         # logging.info(f"       • ❌ Incorrect: {incorrect_count}")
         
-        error_count = sum(1 for r in results.values() if not r or r.get('predict') == 'error')
-        logging.info(f"   • ❌ Failed: {error_count}")
+        error_count = sum(1 for r in results.values() if r.get('predict') == 'timeout')
+        logging.info(f"   • ❌ Timeout: {error_count}")
         logging.info("="*60 + "\n")
         
         return results
