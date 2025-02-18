@@ -130,10 +130,7 @@ def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dic
                     raise e
         
         total_time = round(time.time() - start_time, 2)
-        
         all_time = 0
-        for result in results:
-            all_time += results[result]['time']
         
         logging.info("\n" + "="*60)
         logging.info(f"🏁 Test Session Completed at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
