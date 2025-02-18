@@ -347,8 +347,8 @@ class kissatParser(Parser):
             elif 'process-time' in line.lower():
                 try:
                     # Extract number before 's' or 'seconds'
-                    time_str = line.split(':')[-1].strip()
-                    self.result['time'] = float(time_str.split('s')[0].strip())
+                    time_str = line.split(':')[-1].strip().split(' ')[-2]
+                    self.result['time'] = float(time_str.strip())
                 except (ValueError, IndexError):
                     pass
 

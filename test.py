@@ -93,9 +93,6 @@ def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dic
         if not os.path.exists(solver_run_cmd):
             raise FileNotFoundError(f"Solver executable not found: {solver_run_cmd}")
         
-        if solver == 'ckt_reason':
-            test_case_paths = [test_case_path.split('/')[-1].split('.')[0] for test_case_path in test_case_paths]
-            
         results = {}
         start_time = time.time()
         
@@ -136,15 +133,13 @@ def test(test_case_paths, test_args, solver, thread_num, timeout, test_cases_dic
         logging.info(f"🏁 Test Session Completed at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         logging.info(f"\n📊 Summary:")
         logging.info(f"   • Runtime: {total_time}s")
+        
+        all_time = sum(r.get('time') for r in results.values() if r.get('time') is not None)
         logging.info(f"   • Total solve time: {all_time}s")
         logging.info(f"   • Total Cases: {len(results)}")
         
         success_count = sum(1 for r in results.values() if r.get('predict') != 'timeout')
-        # correct_count = sum(1 for r in results.values() if r and r.get('predict') != 'error' and r.get('predict') == r.get('target'))
-        # incorrect_count = sum(1 for r in results.values() if r and r.get('predict') != 'error' and r.get('predict') != r.get('target'))
         logging.info(f"   • ✅ Successful: {success_count}")
-        # logging.info(f"       • ✅ Correct: {correct_count}")
-        # logging.info(f"       • ❌ Incorrect: {incorrect_count}")
         
         error_count = sum(1 for r in results.values() if r.get('predict') == 'timeout')
         logging.info(f"   • ❌ Timeout: {error_count}")
