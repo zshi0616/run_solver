@@ -21,10 +21,6 @@ def parse_args():
     parser.add_argument('--thread_num', type=int, default=8,
                       help='number of threads (default: 8)')
     
-    # Add testcases file format
-    parser.add_argument('--format', type=str, required=True, default='cnf',
-                      help='testcase format can be "cnf", "aag"')
-    
     # Add timeout parameter
     parser.add_argument('--timeout', type=int, default=60,
                       help='timeout for each test case (default: 60 seconds)')
@@ -77,7 +73,7 @@ def parse_args():
     #             test_case_paths.append(path)
     
     # Testcases 
-    test_case_paths = glob.glob(os.path.join(args.testcases, '*.{}'.format(args.format)))
+    test_case_paths = glob.glob(os.path.join(args.testcases, '*.cnf'))
     test_cases_dict = {}
     test_cases_dict['SAT'] = []
     for test_case in test_case_paths:
